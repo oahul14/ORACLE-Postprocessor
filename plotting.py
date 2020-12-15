@@ -59,5 +59,5 @@ if __name__ == "__main__":
         plt.clf()
         plot_others(r, "BC", 100)
         plt.clf()
-        # plot_OA(r, 100)
-        # plt.clf()
+        plot_OA(r, 100)
+        plt.clf()
