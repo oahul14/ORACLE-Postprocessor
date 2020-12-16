@@ -16,3 +16,4 @@ time_slots = {"12": 40000, "13": 35500, "15": 40000, "24": 40000, "26": 37000, "
 lat_range = [[-15, -7], [-7, -2], [-2, 1]]
 
 params = {"CO": "CO_ppbv", "AOD": "AOD0501", "OA": "ORG", "BC": "rBC_massConc", "CCN": "Number_Concentration"}
+units = {"CO": "ppbv", "BC": "ng/${m_3}$", "OA": "mg/${m_3}$", "CCN": "${m^{-3}}$"}

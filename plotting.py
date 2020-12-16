@@ -35,6 +35,8 @@ def plot_OA(r, directory, fac, window):
         label = n.replace("Adf_", "OA ")
         label = label.replace(".txt", "")
         plt.plot(df["ORG"], df['GPS_Alt'], c=cmap[i], label=label) # plot mean values
+        plt.ylabel("Altitude m")
+        plt.xlabel("OA "+units["OA"])
         plt.ylim([0, 6700])
         plt.legend()
     plt.savefig(pname)
@@ -56,6 +58,8 @@ def plot_others(r, directory, tp, fac, window):
         label = n.replace("Adf_", tp+" ")
         label = label.replace(".txt", "")
         plt.plot(df['MA_val'], df['MA_alt'], c=cmap[i], label=label) # plot mean values
+        plt.ylabel("Altitude m")
+        plt.xlabel(tp+" "+units[tp])
         plt.ylim([0, 6700])
         plt.legend()
     plt.savefig(pname)
