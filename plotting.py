@@ -4,7 +4,7 @@ import numpy as np
 import os
 from consts import *
 
-cmap = ['r', 'g', 'b', 'y', 'c', 'k']
+cmap = ['r', 'green', 'b', 'orange', 'purple', 'k']
 
 def filter_lat(df, r):
     return df.loc[(df['Latitude'] >= r[0]) & (df['Latitude'] <= r[1])]
