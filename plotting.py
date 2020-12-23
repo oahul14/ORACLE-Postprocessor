@@ -20,7 +20,7 @@ def cal_mean_avg(df, pos, col_name):
     df.reindex(columns=sorted(df.columns))
     return df
 
-def plot_OA(r, directory, fac, window):
+def plot_OA(l, r, t, directory, fac, window):
     pname = os.path.join(cur_dir, "Plots", "MA_{}_{}_{}-{}.png".format(directory, "OA", r[0], r[1]))
     if window == 1:
         pname = "N" + pname
@@ -34,15 +34,18 @@ def plot_OA(r, directory, fac, window):
         df['MA_val'] = df["ORG"].rolling(window=window).mean()
         label = n.replace("Adf_", "OA ")
         label = label.replace(".txt", "")
-        plt.plot(df["ORG"], df['GPS_Alt'], c=cmap[i], label=label) # plot mean values
-        plt.ylabel("Altitude m")
-        plt.xlabel("OA "+units["OA"])
+        plt.plot(df["ORG"], df['GPS_Alt'], linewidth=3, c=cmap[i], label=label) # plot mean values
+        plt.ylabel("Altitude (m)", fontsize=14)
+        plt.xlabel("OA "+units["OA"], fontsize=14)
         plt.ylim([0, 6700])
-        plt.legend()
+        plt.title("({})".format(l), loc='left', fontsize=15)
+        plt.title("{}".format(t), loc='center', fontsize=15)
+        plt.legend(loc="upper right", prop={'size': 13})
+    plt.tight_layout() 
     plt.savefig(pname)
     plt.clf()
 
-def plot_others(r, directory, tp, fac, window):
+def plot_others(l, r, t, directory, tp, fac, window):
     pname = os.path.join(cur_dir, "Plots", "MA_{}_{}_{}-{}.png".format(directory, tp, r[0], r[1]))
     if window == 1:
         pname = "N" + pname
@@ -57,21 +60,28 @@ def plot_others(r, directory, tp, fac, window):
         df['MA_val'] = df[params[tp]].rolling(window=window).mean()
         label = n.replace("Adf_", tp+" ")
         label = label.replace(".txt", "")
-        plt.plot(df['MA_val'], df['MA_alt'], c=cmap[i], label=label) # plot mean values
-        plt.ylabel("Altitude m")
-        plt.xlabel(tp+" "+units[tp])
+        plt.plot(df['MA_val'], df['MA_alt'], linewidth=3, c=cmap[i], label=label) # plot mean values
+        plt.ylabel("Altitude (m)", fontsize=14)
+        plt.xlabel(tp+" "+units[tp], fontsize=14)
         plt.ylim([0, 6700])
-        plt.legend()
+        plt.title("({})".format(l), loc='left', fontsize=15)
+        plt.title("{}".format(t), loc='center', fontsize=15)
+        plt.legend(loc="upper right", prop={'size': 13})
+    plt.tight_layout() 
     plt.savefig(pname)
     plt.clf()
 
 if __name__ == "__main__":
+    letters = ['a', 'b', 'c']
+    titles = ['15'+u'\N{DEGREE SIGN}'+'S - 7'+u'\N{DEGREE SIGN}'+'S', \
+            '7'+u'\N{DEGREE SIGN}'+'S - 2'+u'\N{DEGREE SIGN}'+'S', \
+                '2'+u'\N{DEGREE SIGN}'+'S - 1'+u'\N{DEGREE SIGN}'+'N']
     for i, r in enumerate(lat_range):
-        plot_others(r, "CombinedData", "CCN", 100, 5)
-        plot_others(r, "PlatformFiltered", "CCN", 100, 5)
-        plot_others(r, "CombinedData", "CO", 100, 5)
-        plot_others(r, "PlatformFiltered", "CO", 100, 5)
-        plot_others(r, "CombinedData", "BC", 100, 5)
-        plot_others(r, "PlatformFiltered", "BC", 100, 5)
-        plot_OA(r, "CombinedData", 100, 5)
-        plot_OA(r, "PlatformFiltered", 100, 5)
+        plot_others(letters[i], r, titles[i], "CombinedData", "CCN", 100, 5)
+        plot_others(letters[i], r, titles[i], "PlatformFiltered", "CCN", 100, 5)
+        plot_others(letters[i], r, titles[i], "CombinedData", "CO", 100, 5)
+        plot_others(letters[i], r, titles[i], "PlatformFiltered", "CO", 100, 5)
+        plot_others(letters[i], r, titles[i], "CombinedData", "BC", 100, 5)
+        plot_others(letters[i], r, titles[i], "PlatformFiltered", "BC", 100, 5)
+        plot_OA(letters[i], r, titles[i], "CombinedData", 100, 5)
+        plot_OA(letters[i], r, titles[i], "PlatformFiltered", 100, 5)
