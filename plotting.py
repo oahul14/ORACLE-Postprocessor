@@ -3,11 +3,9 @@ import pandas as pd
 import numpy as np
 import os
 from consts import *
+from data_filtering import filter_lat
 
 cmap = ['r', 'green', 'b', 'orange', 'purple', 'k']
-
-def filter_lat(df, r):
-    return df.loc[(df['Latitude'] >= r[0]) & (df['Latitude'] <= r[1])]
 
 def cal_mean_avg(df, pos, col_name):
     def custom_round(x, base=20):

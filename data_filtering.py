@@ -1,7 +1,25 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
-from consts import field_map, cur_dir, time_slots, dates
+from consts import field_map, cur_dir, time_slots, dates, params, lat_range
+
+def filter_lat(df, r):
+    return df.loc[(df['Latitude'] >= r[0]) & (df['Latitude'] <= r[1])]
+
+def get_co_plume():
+    f_dir = os.path.join(cur_dir, "FilteredData", "CombinedData")
+    for r in lat_range:
+        print("Lat range: ", r)
+        d = dict()
+        for n in os.listdir(f_dir):
+            dname = os.path.join(f_dir, n)
+            fields = ["Latitude", "Longitude", "GPS_Alt", params['CO']]
+            df = pd.read_csv(dname, usecols=fields, low_memory=False, skipinitialspace=True)
+            df = filter_lat(df, r)
+            if len(df) != 0:
+                row = df.loc[df[params['CO']].idxmax()]
+                d[n] = {'alt':row["GPS_Alt"], 'lat':row["Latitude"], 'lon':row["Longitude"]}
+                print('%s: %s' % (n, d[n]))
 
 def read_txt(date, tp):
     fields = field_map[tp]
