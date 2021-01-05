@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 import os
 from consts import *
-from data_filtering import filter_lat
+from data_management import *
+from calculate_correlations import *
 
 cmap = ['r', 'green', 'b', 'orange', 'purple', 'k']
 
@@ -69,17 +70,27 @@ def plot_others(l, r, t, directory, tp, fac, window):
     plt.savefig(pname)
     plt.clf()
 
+def plot_cor_in_time():
+    bc = getBCRatioByTime_df()
+    oa = getOARatioByTime_df()
+    print(bc)
+    print(oa)
+    fig = plt.figure()
+    ax1 = fig.add_subplot(2, 1, 1)
+    ax2 = fig.add_subplot(2, 1, 2)
+    ax1.errorbar(bc['Date'], bc['FT_BC/dCO'], yerr=bc['FT_BC/dCO.STD'], c='b', capsize=4, fmt='o', mfc='white', label='FT')
+    ax1.errorbar(bc['Date'], bc['BL_BC/dCO'], yerr=bc['BL_BC/dCO.STD'], c='r', capsize=4, fmt='o', mfc='white', label='BL')
+    ax1.set_ylabel("BC/dCO \n$ng/{m^{-3}}  /  ppbv$")
+    ax1.legend()
+    ax2.errorbar(oa['Date'], oa['FT_OA/dCO'], yerr=oa['FT_OA/dCO.STD'], c='b', capsize=4, fmt='o', mfc='white', label='FT')
+    ax2.errorbar(oa['Date'], oa['BL_OA/dCO'], yerr=oa['BL_OA/dCO.STD'], c='r', capsize=4, fmt='o', mfc='white', label='BL')
+    ax2.set_ylabel("OA/dCO \n$ng/{m^{-3}}  /  ppbv$")
+    ax2.set_xlabel("Date")
+    ax2.legend()
+    plt.show()
+
+def plot_cor_in_space():
+    pass
+
 if __name__ == "__main__":
-    letters = ['a', 'b', 'c']
-    titles = ['15'+u'\N{DEGREE SIGN}'+'S - 7'+u'\N{DEGREE SIGN}'+'S', \
-            '7'+u'\N{DEGREE SIGN}'+'S - 2'+u'\N{DEGREE SIGN}'+'S', \
-                '2'+u'\N{DEGREE SIGN}'+'S - 1'+u'\N{DEGREE SIGN}'+'N']
-    for i, r in enumerate(lat_range):
-        plot_others(letters[i], r, titles[i], "CombinedData", "CCN", 100, 5)
-        plot_others(letters[i], r, titles[i], "PlatformFiltered", "CCN", 100, 5)
-        plot_others(letters[i], r, titles[i], "CombinedData", "CO", 100, 5)
-        plot_others(letters[i], r, titles[i], "PlatformFiltered", "CO", 100, 5)
-        plot_others(letters[i], r, titles[i], "CombinedData", "BC", 100, 5)
-        plot_others(letters[i], r, titles[i], "PlatformFiltered", "BC", 100, 5)
-        plot_OA(letters[i], r, titles[i], "CombinedData", 100, 5)
-        plot_OA(letters[i], r, titles[i], "PlatformFiltered", 100, 5)
+    plot_cor_in_time()

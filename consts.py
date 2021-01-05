@@ -1,10 +1,11 @@
 import os
 
 dates = ["12", "13", "15", "24", "26", "28"]
+dates_oa = ["13", "15", "26"]
 
 cur_dir    = os.path.dirname(os.path.realpath(__file__))
 aod_fields = ["Start_UTC", "Latitude", "Longitude", "GPS_Alt", "AOD0501"]
-co_fields  = ["Start_UTC", "Mid_UTC", "CO_ppbv"]
+co_fields  = ["Start_UTC", "Mid_UTC", "CO_ppbv", "CO2_ppmv"]
 bc_fields  = ["Start_UTC", "rBC_massConc"]
 oa_fields  = ["Start_UTC", "ORG"]
 ccn_fields = ["UTC_mid", "Number_Concentration"]
