@@ -76,8 +76,10 @@ def getBCRatio(df, bgCO):
     df['dCO_ppbv'] = df.CO_ppbv - bgCO
     sim = df[['GPS_Alt', 'dCO_ppbv', 'rBC_massConc']].copy()
     sim = sim.dropna()
+    sim = sim.loc[sim['rBC_massConc'] > 100]
+    print(sim)
     myoutput = getOutput(sim['dCO_ppbv'], sim['rBC_massConc'])
-    # B = myoutput.beta
+    B = myoutput.beta
     # plt.plot(df['dCO_ppbv'], B[0]*df['dCO_ppbv']+B[1])
     # plt.scatter(df['dCO_ppbv'],df['rBC_massConc'])
     # plt.show()
@@ -85,11 +87,11 @@ def getBCRatio(df, bgCO):
 
 def getOARatio(df, bgCO):
     df['dCO_ppbv'] = df.CO_ppbv - bgCO
-    # df.ORG *= 1000
-    sim = df[['GPS_Alt', 'dCO_ppbv', 'ORG']].copy()
+    sim = df[['GPS_Alt', 'dCO_ppbv', 'ORG', 'rBC_massConc']].copy()
     sim = sim.dropna()
+    sim = sim.loc[sim['rBC_massConc'] > 100]
     myoutput = getOutput(sim['dCO_ppbv'], sim['ORG'])
-    # B = myoutput.beta
+    B = myoutput.beta
     # plt.plot(df['dCO_ppbv'], B[0]*df['dCO_ppbv']+B[1])
     # plt.scatter(df['dCO_ppbv'],df['ORG'])
     # plt.show()

@@ -32,15 +32,15 @@ def getBCRatioBySpace_df():
         bc = pd.concat([bc, df], ignore_index=True)
     ft, bl = bc[bc['GPS_Alt'] >= 1200], df.loc[(df['GPS_Alt'] < 1200) & (df['GPS_Alt'] > 100)]
     for j, r in enumerate(lat_range):
-        rs = str(r[0]) + ', ' + str(r[1])
+        rs = lat_rs[j]
         rft = filter_lat(ft, r)
         rft_BCpCO = [np.nan, np.nan]
         if len(rft) != 0:
             rft_map = get_background(rft)
             rft_BCpCO = getBCRatio(rft, rft_map['bgCO_ppbv'])
 
-        rbl = filter_lat(bl, r)
         rbl_BCpCO = [np.nan, np.nan]
+        rbl = filter_lat(bl, r)
         if len(rbl) != 0:
             rbl_map = get_background(rbl)
             rbl_BCpCO = getBCRatio(rbl, rbl_map['bgCO_ppbv'])
@@ -77,16 +77,16 @@ def getOARatioBySpace_df():
         bc = pd.concat([bc, df], ignore_index=True)
     ft, bl = bc[bc['GPS_Alt'] >= 1200], df.loc[(df['GPS_Alt'] < 1200) & (df['GPS_Alt'] > 100)]
     for j, r in enumerate(lat_range):
-        rs = str(r[0]) + ', ' + str(r[1])
+        rs = lat_rs[j]
         rft = filter_lat(ft, r)
         rft_OApCO = [np.nan, np.nan]
-        if len(rft) != 0:
+        if len(rft) > 50:
             rft_map = get_background(rft)
             rft_OApCO = getOARatio(rft, rft_map['bgCO_ppbv'])
 
-        rbl = filter_lat(bl, r)
         rbl_OApCO = [np.nan, np.nan]
-        if len(rbl) != 0:
+        rbl = filter_lat(bl, r)
+        if len(rbl) > 50:
             rbl_map = get_background(rbl)
             rbl_OApCO = getOARatio(rbl, rbl_map['bgCO_ppbv'])
 
