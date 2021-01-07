@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from scipy import odr
+from scipy import odr, stats
 import matplotlib.pyplot as plt
 import os
 from consts import field_map, cur_dir, time_slots, dates, params, lat_range
@@ -51,8 +51,8 @@ def getOutput(xa, ya):
     return myoutput
 
 def getMCE(df, bgCO, bgCO2):
-    df['dCO_ppbv'] = df.CO_ppbv - bgCO
-    df['dCO2_ppbv'] = df.CO2_ppmv*1000 - bgCO2
+    y = df.CO_ppbv - bgCO
+    x = df.CO2_ppmv*1000 - bgCO2
     # MCE = (df['dCO2_ppbv'] / (df['dCO2_ppbv'] + df['dCO_ppbv'])).mean()
     # COmean, COstd = df['dCO_ppbv'].mean(), df['dCO_ppbv'].std()
     # CO2mean, CO2std = df['dCO2_ppbv'].mean(), df['dCO2_ppbv'].std()
@@ -64,38 +64,50 @@ def getMCE(df, bgCO, bgCO2):
     # dMCE = MCE * (dSum + pCO2 - pCOCO2)**0.5
     # print(MCE, dMCE)
     # print(df['dCO2_ppbv'].isnull().sum(), df['dCO_ppbv'].isnull().sum())
-    myoutput = getOutput(df['dCO2_ppbv'], df['dCO_ppbv'])
+    myoutput = getOutput(x, y)
     B = myoutput.beta
-    plt.plot(df['dCO2_ppbv'], B[0]*df['dCO2_ppbv']+B[1])
-    plt.scatter(df['dCO2_ppbv'],df['dCO_ppbv'])
+    plt.plot(x, B[0]*x+B[1])
+    plt.scatter(x, y)
     myoutput.pprint()
     print("\n")
     plt.show()
 
-def getBCRatio(df, bgCO):
-    df['dCO_ppbv'] = df.CO_ppbv - bgCO
-    sim = df[['GPS_Alt', 'dCO_ppbv', 'rBC_massConc']].copy()
+def getBCRatio(df, bgCO, COout=False):
+    df.loc[:, 'dCO_ppbv'] = df.CO_ppbv - bgCO
+    sim = df[['GPS_Alt', 'dCO_ppbv', 'rBC_massConc', 'Start_UTC', 'Latitude']].copy()
     sim = sim.dropna()
     sim = sim.loc[sim['rBC_massConc'] > 100]
-    print(sim)
-    myoutput = getOutput(sim['dCO_ppbv'], sim['rBC_massConc'])
-    B = myoutput.beta
-    # plt.plot(df['dCO_ppbv'], B[0]*df['dCO_ppbv']+B[1])
-    # plt.scatter(df['dCO_ppbv'],df['rBC_massConc'])
+    if COout:
+        sim = sim.drop(sim[(sim['dCO_ppbv'] < 10) & (sim['rBC_massConc'] > 100)].index)
+    # myoutput = getOutput(sim['dCO_ppbv'], sim['rBC_massConc'])
+    # myoutput.pprint()
+    B = [np.nan]*5
+    if len(sim) > 0:
+        B = stats.linregress(sim['dCO_ppbv'], sim['rBC_massConc'])
+    # B = myoutput.beta
+    # plt.plot(sim['dCO_ppbv'], B[0]*sim['dCO_ppbv']+B[1])
+    # plt.scatter(sim['dCO_ppbv'],sim['rBC_massConc'], c=sim['Latitude'], cmap=plt.cm.get_cmap('RdYlBu'))
+    # plt.colorbar()
     # plt.show()
-    return myoutput.beta[0], myoutput.sd_beta[0]
+    return B[0], B[-1]
+    # return myoutput.beta[0], myoutput.sd_beta[0]
 
 def getOARatio(df, bgCO):
-    df['dCO_ppbv'] = df.CO_ppbv - bgCO
-    sim = df[['GPS_Alt', 'dCO_ppbv', 'ORG', 'rBC_massConc']].copy()
+    df.loc[:, 'dCO_ppmv'] = (df.CO_ppbv - bgCO)/1000
+    sim = df[['GPS_Alt', 'dCO_ppmv', 'ORG', 'rBC_massConc', 'Start_UTC', 'Latitude']].copy()
     sim = sim.dropna()
     sim = sim.loc[sim['rBC_massConc'] > 100]
-    myoutput = getOutput(sim['dCO_ppbv'], sim['ORG'])
-    B = myoutput.beta
-    # plt.plot(df['dCO_ppbv'], B[0]*df['dCO_ppbv']+B[1])
-    # plt.scatter(df['dCO_ppbv'],df['ORG'])
+    print(sim[['ORG', 'dCO_ppmv']])
+    # myoutput = getOutput(sim['dCO_ppmv'], sim['ORG'])
+    # B = myoutput.beta
+    B = [np.nan]*5
+    if len(sim) > 0:
+        B = stats.linregress(sim['dCO_ppmv'], sim['ORG'])
+    # plt.plot(sim['dCO_ppmv'], B[0]*sim['dCO_ppmv']+B[1])
+    # plt.scatter(sim['dCO_ppmv'],sim['ORG'])
     # plt.show()
-    return myoutput.beta[0], myoutput.sd_beta[0]
+    return B[0], B[-1]
+    # return myoutput.beta[0], myoutput.sd_beta[0]
 
 def has_empty_row(df, cols):
     for _, row in df.iterrows():

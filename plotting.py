@@ -70,44 +70,84 @@ def plot_others(l, r, t, directory, tp, fac, window):
     plt.savefig(pname)
     plt.clf()
 
+def antByXY(ax, c, xs, ys, j):
+    for x,y in zip(xs, ys):
+        l = "{:.2f}".format(y)
+        plt.text(x, y+j, l, {'color': c},horizontalalignment='center')
+
 def plot_cor_in_time():
     bc = getBCRatioByTime_df()
     oa = getOARatioByTime_df()
     bc.to_csv(os.path.join(cur_dir, "cor_csvs", "inTime_bc.csv"))
     oa.to_csv(os.path.join(cur_dir, "cor_csvs", "inTime_oa.csv"))
+
+    plt.style.use('ggplot')
     fig = plt.figure()
+    ##############
     ax1 = fig.add_subplot(2, 1, 1)
-    ax2 = fig.add_subplot(2, 1, 2)
+
     ax1.errorbar(bc['Date'], bc['FT_BC/dCO'], yerr=bc['FT_BC/dCO.STD'], c='b', capsize=4, fmt='o', mfc='white', label='FT')
+    antByXY(ax1, 'b', bc['Date'], bc['FT_BC/dCO'], 3)
+
     ax1.errorbar(bc['Date'], bc['BL_BC/dCO'], yerr=bc['BL_BC/dCO.STD'], c='r', capsize=4, fmt='o', mfc='white', label='BL')
+    antByXY(ax1, 'r', bc['Date'], bc['BL_BC/dCO'], -4)
+
     ax1.set_ylabel("BC/dCO \n$ng/{m^{3}}  /  ppbv$")
+    ax1.set_ylim([0, 27])
     ax1.legend()
+
+    ##############
+    ax2 = fig.add_subplot(2, 1, 2)
+
     ax2.errorbar(oa['Date'], oa['FT_OA/dCO'], yerr=oa['FT_OA/dCO.STD'], c='b', capsize=4, fmt='o', mfc='white', label='FT')
+    antByXY(ax2, 'b', oa['Date'], oa['FT_OA/dCO'], 11)
+
     ax2.errorbar(oa['Date'], oa['BL_OA/dCO'], yerr=oa['BL_OA/dCO.STD'], c='r', capsize=4, fmt='o', mfc='white', label='BL')
+    antByXY(ax2, 'r', oa['Date'], oa['BL_OA/dCO'], -36)
+
     ax2.set_ylabel("OA/dCO \n$ng/{m^{3}}  /  ppbv$")
+    ax2.set_ylim([-50, 230])
     ax2.set_xlabel("Date")
     ax2.legend()
-    plt.show()
+
+    ##############
+    plt.tight_layout()
+    # plt.show()
+    plt.savefig(os.path.join(cur_dir, "Plots", "cor_in_time.png"))
 
 def plot_cor_in_space():
     bc = getBCRatioBySpace_df()
     oa = getOARatioBySpace_df()
     bc.to_csv(os.path.join(cur_dir, "cor_csvs", "inSpace_bc.csv"))
     oa.to_csv(os.path.join(cur_dir, "cor_csvs", "inSpace_oa.csv"))
+
+    plt.style.use('ggplot')
     fig = plt.figure()
+
+    ##############
     ax1 = fig.add_subplot(2, 1, 1)
-    ax2 = fig.add_subplot(2, 1, 2)
+
     ax1.errorbar(bc['Area'], bc['FT_BC/dCO'], yerr=bc['FT_BC/dCO.STD'], c='b', capsize=4, fmt='o', mfc='white', label='FT')
+    antByXY(ax1, 'b', bc['Area'], bc['FT_BC/dCO'], 0.5)
+
     # ax1.errorbar(bc['Area'], bc['BL_BC/dCO'], yerr=bc['BL_BC/dCO.STD'], c='r', capsize=4, fmt='o', mfc='white', label='BL')
     ax1.set_ylabel("BC/dCO \n$ng/{m^{3}}  /  ppbv$")
+    ax1.set_ylim([12, 20])
     ax1.legend()
+
+    ##################
+    ax2 = fig.add_subplot(2, 1, 2)
     ax2.errorbar(oa['Area'], oa['FT_OA/dCO'], yerr=oa['FT_OA/dCO.STD'], c='b', capsize=4, fmt='o', mfc='white', label='FT')
+    antByXY(ax2, 'b', oa['Area'], oa['FT_OA/dCO'], 6)
     # ax2.errorbar(oa['Area'], oa['BL_OA/dCO'], yerr=oa['BL_OA/dCO.STD'], c='r', capsize=4, fmt='o', mfc='white', label='BL')
     ax2.set_ylabel("OA/dCO \n$ng/{m^{3}}  /  ppbv$")
     ax2.set_xlabel("Area")
+    ax2.set_ylim([70, 160])
     ax2.legend()
-    plt.show()
+    plt.tight_layout()
+    # plt.show()
+    plt.savefig(os.path.join(cur_dir, "Plots", "cor_in_space.png"))
 
 if __name__ == "__main__":
-    plot_cor_in_space()
     plot_cor_in_time()
+    plot_cor_in_space()
