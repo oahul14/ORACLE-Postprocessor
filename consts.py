@@ -1,7 +1,7 @@
 import os
 
 dates = ["12", "13", "15", "24", "26", "28"]
-dates_oa = ["13", "15", "26"]
+dates_oa = ["13", "15", "24", "26"]
 
 cur_dir    = os.path.dirname(os.path.realpath(__file__))
 aod_fields = ["Start_UTC", "Latitude", "Longitude", "GPS_Alt", "AOD0501"]
@@ -18,4 +18,4 @@ lat_range = [[-15, -7], [-7, -2], [-2, 1]]
 lat_rs = ['15S - 7S', '7S - 2S', '2S - 1N']
 
 params = {"CO": "CO_ppbv", "AOD": "AOD0501", "OA": "ORG", "BC": "rBC_massConc", "CCN": "Number_Concentration"}
-units = {"CO": "(ppbv)", "BC": "(ng/${m^3}$)", "OA": "(mg/${m^3})$", "CCN": "$({m^{-3}}$)"}
+units = {"CO": "(ppmv)", "BC": "(ug/${m^3}$)", "OA": "(ug/${m^3})$", "CCN": "$({m^{-3}}$)"}

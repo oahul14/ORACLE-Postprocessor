@@ -34,6 +34,6 @@ if __name__ == "__main__":
         print(len(adf))
         adf.to_csv(os.path.join(cur_dir, "FilteredData", "CombinedData", adf_name), index=False)
 
-        adf = filter_platform(adf, d)
-        print(len(adf))
-        adf.to_csv(os.path.join(cur_dir, "FilteredData", "PlatformFiltered", "NOP_"+adf_name), index=False)
+        # adf = filter_platform(adf, d)
+        # print(len(adf))
+        # adf.to_csv(os.path.join(cur_dir, "FilteredData", "PlatformFiltered", "NOP_"+adf_name), index=False)

@@ -56,7 +56,7 @@ def getBCRatioBySpace_df():
 
 def getOARatioByTime_df():
     OApCO = pd.DataFrame(columns=['Date', 'FT_OA/dCO', 'FT_OA/dCO.STD', 'BL_OA/dCO', 'BL_OA/dCO.STD'])
-    csvs = ['Adf_0813.csv','Adf_0815.csv', 'Adf_0826.csv']
+    csvs = ['Adf_0813.csv','Adf_0815.csv', 'Adf_0824.csv', 'Adf_0826.csv']
     for i, csv in enumerate(csvs):
         date = str(dates_oa[i]) + '/08'
         df = pd.read_csv(os.path.join(tar_dir, csv))
@@ -73,7 +73,7 @@ def getOARatioByTime_df():
     return OApCO
 
 def getOARatioBySpace_df():
-    csvs = ['Adf_0813.csv','Adf_0815.csv', 'Adf_0826.csv']
+    csvs = ['Adf_0813.csv','Adf_0815.csv', 'Adf_0824.csv', 'Adf_0826.csv']
     fields = ['GPS_Alt', 'Start_UTC', 'Latitude', 'CO_ppbv', 'CO2_ppmv', 'rBC_massConc', 'ORG']
     res = pd.DataFrame(columns=['Area', 'FT_OA/dCO', 'FT_OA/dCO.STD', 'BL_OA/dCO', 'BL_OA/dCO.STD'])
     bc = pd.read_csv(os.path.join(tar_dir, csvs[0]), skipinitialspace=True, usecols=fields)
@@ -99,5 +99,3 @@ def getOARatioBySpace_df():
         res.loc[j] = row
     return res
 
-if __name__ == "__main__":
-    print(getOARatioBySpace_df())
