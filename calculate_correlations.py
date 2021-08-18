@@ -76,24 +76,24 @@ def getOARatioBySpace_df():
     csvs = ['Adf_0813.csv','Adf_0815.csv', 'Adf_0824.csv', 'Adf_0826.csv']
     fields = ['GPS_Alt', 'Start_UTC', 'Latitude', 'CO_ppbv', 'CO2_ppmv', 'rBC_massConc', 'ORG']
     res = pd.DataFrame(columns=['Area', 'FT_OA/dCO', 'FT_OA/dCO.STD', 'BL_OA/dCO', 'BL_OA/dCO.STD'])
-    bc = pd.read_csv(os.path.join(tar_dir, csvs[0]), skipinitialspace=True, usecols=fields)
+    oa = pd.read_csv(os.path.join(tar_dir, csvs[0]), skipinitialspace=True, usecols=fields)
     for i in range(1, len(csvs)):
         df = pd.read_csv(os.path.join(tar_dir, csvs[i]), skipinitialspace=True, usecols=fields)
-        bc = pd.concat([bc, df], ignore_index=True)
-    ft, bl = bc[bc['GPS_Alt'] >= 1200], df.loc[(df['GPS_Alt'] < 1200) & (df['GPS_Alt'] > 100)]
+        oa = pd.concat([oa, df], ignore_index=True)
+    ft, bl = oa[oa['GPS_Alt'] >= 1200], oa.loc[(oa['GPS_Alt'] < 1200) & (oa['GPS_Alt'] > 100)]
     for j, r in enumerate(lat_range):
         rs = lat_rs[j]
         rft = filter_lat(ft, r)
         rft_OApCO = [np.nan, np.nan]
-        if len(rft) != 0:
-            rft_map = get_background(rft)
-            rft_OApCO = getOARatio(rft, rft_map['bgCO_ppbv'])
+        # if len(rft) != 0:
+        rft_map = get_background(rft)
+        rft_OApCO = getOARatio(rft, rft_map['bgCO_ppbv'])
 
         rbl_OApCO = [np.nan, np.nan]
         rbl = filter_lat(bl, r)
-        if len(rbl) != 0:
-            rbl_map = get_background(rbl)
-            rbl_OApCO = getOARatio(rbl, rbl_map['bgCO_ppbv'])
+        # if len(rbl) != 0:
+        rbl_map = get_background(rbl)
+        rbl_OApCO = getOARatio(rbl, rbl_map['bgCO_ppbv'])
 
         row = [rs, rft_OApCO[0], rft_OApCO[1], rbl_OApCO[0], rbl_OApCO[1]]
         res.loc[j] = row

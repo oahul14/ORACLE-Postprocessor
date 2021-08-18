@@ -18,4 +18,4 @@ lat_range = [[-15, -7], [-7, -2], [-2, 1]]
 lat_rs = ['15S - 7S', '7S - 2S', '2S - 1N']
 
 params = {"CO": "CO_ppbv", "AOD": "AOD0501", "OA": "ORG", "BC": "rBC_massConc", "CCN": "Number_Concentration"}
-units = {"CO": "(ppmv)", "BC": "(ug/${m^3}$)", "OA": "(ug/${m^3})$", "CCN": "$({m^{-3}}$)"}
+units = {"CO": "(ppmv)", "BC": "($\mu g$/${m^3}$)", "OA": "($\mu g$/${m^3})$", "CCN": "$({m^{-3}}$)"}

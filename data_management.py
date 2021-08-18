@@ -79,18 +79,14 @@ def getBCRatio(df, bgCO, COout=False):
     sim = sim.loc[sim['rBC_massConc'] > 100]
     if COout:
         sim = sim.drop(sim[(sim['dCO_ppbv'] < 10) & (sim['rBC_massConc'] > 100)].index)
-    # myoutput = getOutput(sim['dCO_ppbv'], sim['rBC_massConc'])
-    # myoutput.pprint()
     B = [np.nan]*5
     if len(sim) > 0:
         B = stats.linregress(sim['dCO_ppbv'], sim['rBC_massConc'])
-    # B = myoutput.beta
     # plt.plot(sim['dCO_ppbv'], B[0]*sim['dCO_ppbv']+B[1])
     # plt.scatter(sim['dCO_ppbv'],sim['rBC_massConc'], c=sim['Latitude'], cmap=plt.cm.get_cmap('RdYlBu'))
     # plt.colorbar()
     # plt.show()
     return B[0], B[-1]
-    # return myoutput.beta[0], myoutput.sd_beta[0]
 
 def getOARatio(df, bgCO):
     df.loc[:, 'dCO_ppmv'] = (df.CO_ppbv - bgCO)/1000
@@ -98,8 +94,6 @@ def getOARatio(df, bgCO):
     sim = sim.dropna()
     sim = sim.loc[sim['rBC_massConc'] > 100]
     print(sim[['ORG', 'dCO_ppmv']])
-    # myoutput = getOutput(sim['dCO_ppmv'], sim['ORG'])
-    # B = myoutput.beta
     B = [np.nan]*5
     if len(sim) > 0:
         B = stats.linregress(sim['dCO_ppmv'], sim['ORG'])
@@ -107,7 +101,6 @@ def getOARatio(df, bgCO):
     # plt.scatter(sim['dCO_ppmv'],sim['ORG'])
     # plt.show()
     return B[0], B[-1]
-    # return myoutput.beta[0], myoutput.sd_beta[0]
 
 def has_empty_row(df, cols):
     for _, row in df.iterrows():
